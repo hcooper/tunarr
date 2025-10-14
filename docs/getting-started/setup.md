@@ -28,7 +28,7 @@ Please note that FFmpeg is provided in Tunarr Docker images, so Docker users sho
 
 !!! info
 
-    In order to set the FFmpeg path, Tunarr must be run in "admin mode". Please see the [Security](/configure/system/security) page for more details on how to run Tunarr in admin mode and why this is necessary.
+    The FFmpeg path can be set directly in the Tunarr UI (Settings → FFmpeg). For advanced users, FFmpeg paths can also be configured via the CLI as described in the [Security](/configure/system/security) page.
 
 Click "FINISH" and you will be brought to the new channel page to [create your first channel](/configure/channels/properties).
 

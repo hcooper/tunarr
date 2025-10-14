@@ -1,82 +1,30 @@
 # Security
 
-## Admin mode
+!!! warning "Do not expose Tunarr to the public internet"
 
-Due to [this exploit](https://www.exploit-db.com/exploits/52079) Tunarr supports "admin mode". By default, admin mode is disabled. Some settings, like FFmpeg executable paths, can only be edited in the Tunarr UI when Tunarr is running in admin mode. **NOTE**: This shouldn't be confused with Windows "run as administrator"!
+    Tunarr should not be exposed to the public internet via port forwarding. While security is taken seriously, streaming and administration endpoints are not currently separated or authorized, making public exposure unsafe. Expose Tunarr at your own risk.
 
-There are several ways to update sensitive settings that require admin mode.
+## Updating sensitive settings
 
-### Running in admin mode
+Tunarr protects against RCE exploits by using `execFile()` instead of `exec()` when executing child processes, combined with proper input sanitization. As of v0.21.0, FFmpeg executable paths can be edited directly in the UI (this was previously restricted to "admin mode" which has been removed).
+
+For advanced users, settings can also be updated via the CLI:
 
 ### Standalone binary
 
-Pass the `--admin` flag when running the executable, e.g.:
-
 ```bash
- ./tunarr --admin
-```
-
-or on Windows:
-
-```powershell
-.\tunarr.exe --admin
-```
-
-You can also use an environment variable:
-
-```bash
-TUNARR_SERVER_ADMIN_MODE=true ./tunarr
-```
-
-and again on Windows (Powershell):
-
-```powershell
-$Env:TUNARR_SERVER_ADMIN_MODE='true'
-.\tunarr.exe
-```
-
-or Command Prompt:
-
-```
-set TUNARR_SERVER_ADMIN_MODE=true
-.\tunarr.exe
+./tunarr settings update --settings.ffmpeg.ffmpegExecutablePath="FFMPEG_PATH" --settings.ffmpeg.ffprobeExecutablePath="FFPROBE_PATH"
 ```
 
 ### Docker
 
-Start Tunarr server with the `admin` argument
-
-```bash
-docker run ... chrisbenincasa/tunarr:latest -- /tunarr/tunarr --admin
-```
-
-!!! note
-
-    <a href="https://github.com/chrisbenincasa/tunarr/issues/900" target="_blank">chrisbenincasa/tunarr#900</a> tracks simplifying running commands against Tunarr within a container.
-
-or with the environment variable
-
-```bash
-docker run -e 'TUNARR_SERVER_ADMIN_MODE=true' ... chrisbenincasa/tunarr
-```
-
-### Updating sensitive values directly
-
-Tunarr supports other run modes other than server. One is updating settings.json values directly. This can be done against a running Tunarr server without admin mode enabled.
-
-```bash
-./tunarr.sh settings update --settings.ffmpeg.ffmpegExecutablePath="FFMEPG_PATH" --settings.ffmpeg.ffprobeExecutablePath="FFPROBE_PATH"
-```
-
-This also works with Docker
-
 ```bash
 docker run --rm \
-  ...
+  -v /path/to/tunarr/data:/config/tunarr \
   chrisbenincasa/tunarr -- /tunarr/tunarr \
   settings update \
-  settings.ffmpeg.ffmpegExecutablePath="FFMEPG_PATH" \
-  settings.ffmpeg.ffprobeExecutablePath="FFPROBE_PATH"
+  --settings.ffmpeg.ffmpegExecutablePath="FFMPEG_PATH" \
+  --settings.ffmpeg.ffprobeExecutablePath="FFPROBE_PATH"
 ```
 
 ## Trust proxy
