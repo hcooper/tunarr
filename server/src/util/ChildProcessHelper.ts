@@ -212,5 +212,6 @@ function createDefaultSpawnOpts(opts?: Partial<SpawnOpts>): SpawnOpts {
     restartOnFailure: opts?.restartOnFailure ?? true,
     maxAttempts: opts?.maxAttempts ?? 1,
     name: opts?.name ?? 'unknown',
+    additionalOpts: opts?.additionalOpts,
   } satisfies SpawnOpts;
 }
